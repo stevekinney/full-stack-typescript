@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express, { type Request, type Response } from 'express';
 import type { Database } from 'sqlite';
-import { getErrorMessage } from './get-error-message.js';
+import { handleError } from './get-error-message.js';
 
 export async function createServer(database: Database) {
   const app = express();
@@ -25,8 +25,7 @@ export async function createServer(database: Database) {
       const tasks = await query.all();
       return res.json(tasks);
     } catch (error) {
-      const message = getErrorMessage(req, error);
-      return res.status(500).json({ message });
+      return handleError(req, res, error);
     }
   });
 
@@ -41,8 +40,7 @@ export async function createServer(database: Database) {
 
       return res.json(task);
     } catch (error) {
-      const message = getErrorMessage(req, error);
-      return res.status(500).json({ message });
+      return handleError(req, res, error);
     }
   });
 
@@ -55,8 +53,7 @@ export async function createServer(database: Database) {
       await createTask.run([task.title, task.description]);
       return res.sendStatus(201);
     } catch (error) {
-      const message = getErrorMessage(req, error);
-      return res.status(500).json({ message });
+      return handleError(req, res, error);
     }
   });
 
@@ -72,8 +69,7 @@ export async function createServer(database: Database) {
       await updateTask.run([task.title, task.description, task.completed, id]);
       return res.sendStatus(200);
     } catch (error) {
-      const message = getErrorMessage(req, error);
-      return res.status(500).json({ message });
+      return handleError(req, res, error);
     }
   });
 
@@ -85,8 +81,7 @@ export async function createServer(database: Database) {
       await deleteTask.run([id]);
       return res.sendStatus(200);
     } catch (error) {
-      const message = getErrorMessage(req, error);
-      return res.status(500).json({ message });
+      return handleError(req, res, error);
     }
   });
 

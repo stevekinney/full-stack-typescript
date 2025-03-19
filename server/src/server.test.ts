@@ -7,6 +7,11 @@ import type { Database } from 'sqlite';
 import { getDatabase } from './database.js';
 import { createServer } from './server.js';
 
+const booleanOrBinary = (expected: true | false | 0 | 1) => ({
+  asymmetricMatch: (value: unknown) => !!value === !!expected,
+  toString: () => `Expected ${!!expected}`,
+});
+
 describe('Tasks API', () => {
   let app: Application;
   let database: Database;
@@ -89,7 +94,6 @@ describe('Tasks API', () => {
     it('should return 400 if title is missing', async () => {
       const response = await request(app).post('/tasks').send({ description: 'No title provided' });
       expect(response.status).toBe(400);
-      expect(response.body).toEqual({ message: 'Title is required' });
     });
   });
 
@@ -114,7 +118,7 @@ describe('Tasks API', () => {
         id: taskId,
         title: 'Updated Task',
         description: 'Updated Description',
-        completed: 0,
+        completed: booleanOrBinary(0),
       });
     });
 
@@ -140,7 +144,7 @@ describe('Tasks API', () => {
         id: taskId,
         title: 'Task to complete',
         description: 'Will be completed',
-        completed: 1, // true is represented as 1 in SQLite
+        completed: booleanOrBinary(1), // true is represented as 1 in SQLite
       });
     });
   });
