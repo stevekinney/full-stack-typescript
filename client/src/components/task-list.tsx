@@ -1,18 +1,18 @@
 import { useTasks } from '../contexts/task-context';
 
-import { Task } from './task';
-import { EmptyState } from './empty-state';
+import { EmptyState, LoadingState } from './empty-state';
 import { Error } from './error';
+import { Task } from './task';
 
 export const TaskList = () => {
-  const { tasks, error } = useTasks();
+  const { tasks, error, loading } = useTasks();
 
   if (error) {
     return <Error error={error} />;
   }
 
   if (tasks.length === 0) {
-    return <EmptyState />;
+    return loading ? <LoadingState /> : <EmptyState />;
   }
 
   return (
