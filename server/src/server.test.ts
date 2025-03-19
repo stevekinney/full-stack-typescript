@@ -87,7 +87,7 @@ describe('Tasks API', () => {
       expect(getResponse.body[0]).toMatchObject({
         title: 'New Task',
         description: 'Task description',
-        completed: 0, // Default should be false (0)
+        completed: booleanOrBinary(0), // Default should be false (0)
       });
     });
 
