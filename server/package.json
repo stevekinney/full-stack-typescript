@@ -1,0 +1,43 @@
+{
+  "name": "busy-bee-api",
+  "version": "1.0.0",
+  "description": "A simple task management applicaton for the sole purpose of learning how to build type-safe applications.",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "tsx watch src/index.ts",
+    "test": "vitest",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx}\"",
+    "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
+    "lint:fix": "eslint --fix \"src/**/*.{ts,tsx,js,jsx}\""
+  },
+  "author": "Steve Kinney <hello@stevekinney.net> (https://stevekinney.net/courses/full-stack-typescript)",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "@types/cors": "^2.8.17",
+    "@types/express": "4.17.21",
+    "@types/sqlite3": "^3.1.11",
+    "@types/supertest": "^6.0.2",
+    "@vitest/coverage-v8": "^3.0.8",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.2.5",
+    "supertest": "^7.0.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^7.2.0",
+    "vitest": "^3.0.8"
+  }
+}

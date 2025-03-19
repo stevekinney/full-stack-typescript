@@ -1,0 +1,28 @@
+{
+  "name": "zod-exercises",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Exercises and playgrounds for Steve's Full-Stack TypeScript Course.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest"
+  },
+  "author": "Steve Kinney <hello@stevekinney.net> (https://stevekinney.net/courses/full-stack-typescript)",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/body-parser": "1.19.5",
+    "@types/express": "4.17.21",
+    "@types/supertest": "^6.0.2",
+    "supertest": "^7.0.0",
+    "vitest": "3.0.8"
+  },
+  "dependencies": {
+    "body-parser": "1.20.3",
+    "express": "4.21.2",
+    "get-port": "^7.1.0",
+    "tsx": "4.19.3",
+    "uuid": "11.1.0",
+    "zod": "3.24.2"
+  }
+}

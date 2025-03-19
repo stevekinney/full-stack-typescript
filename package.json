@@ -1,0 +1,12 @@
+{
+  "name": "full-stack-typescript",
+  "author": "Steve Kinney <hello@stevekinney.net> (https://stevekinney.net/courses/full-stack-typescript)",
+  "workspaces": [
+    "server",
+    "client",
+    "exercises"
+  ],
+  "dependencies": {
+    "class-variance-authority": "^0.7.1"
+  }
+}
