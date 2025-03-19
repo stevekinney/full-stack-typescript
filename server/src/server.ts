@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express, { type Request, type Response } from 'express';
 import type { Database } from 'sqlite';
-import { handleError } from './get-error-message.js';
+import { handleError } from './handle-error.js';
 
 export async function createServer(database: Database) {
   const app = express();
@@ -31,9 +31,8 @@ export async function createServer(database: Database) {
 
   // Get a specific task
   app.get('/tasks/:id', async (req: Request, res: Response) => {
-    const { id } = req.params;
-
     try {
+      const { id } = req.params;
       const task = await getTask.get([id]);
 
       if (!task) return res.status(404).json({ message: 'Task not found' });
@@ -45,11 +44,10 @@ export async function createServer(database: Database) {
   });
 
   app.post('/tasks', async (req: Request, res: Response) => {
-    const task = req.body;
-
-    if (!task.title) return res.status(400).json({ message: 'Title is required' });
-
     try {
+      const task = req.body;
+      if (!task.title) return res.status(400).json({ message: 'Title is required' });
+
       await createTask.run([task.title, task.description]);
       return res.sendStatus(201);
     } catch (error) {
@@ -59,13 +57,13 @@ export async function createServer(database: Database) {
 
   // Update a task
   app.put('/tasks/:id', async (req: Request, res: Response) => {
-    const { id } = req.params;
-
-    const previous = await getTask.get([id]);
-    const updates = req.body;
-    const task = { ...previous, ...updates };
-
     try {
+      const { id } = req.params;
+
+      const previous = await getTask.get([id]);
+      const updates = req.body;
+      const task = { ...previous, ...updates };
+
       await updateTask.run([task.title, task.description, task.completed, id]);
       return res.sendStatus(200);
     } catch (error) {
@@ -75,9 +73,8 @@ export async function createServer(database: Database) {
 
   // Delete a task
   app.delete('/tasks/:id', async (req: Request, res: Response) => {
-    const { id } = req.params;
-
     try {
+      const { id } = req.params;
       await deleteTask.run([id]);
       return res.sendStatus(200);
     } catch (error) {
