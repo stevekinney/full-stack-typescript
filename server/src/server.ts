@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express, { type Request, type Response } from 'express';
+import express from 'express';
 import type { Database } from 'sqlite';
 import { handleError } from './handle-error.js';
 
@@ -17,7 +17,7 @@ export async function createServer(database: Database) {
     `UPDATE tasks SET title = ?, description = ?, completed = ? WHERE id = ?`,
   );
 
-  app.get('/tasks', async (req: Request, res: Response) => {
+  app.get('/tasks', async (req, res) => {
     const { completed } = req.query;
     const query = completed === 'true' ? completedTasks : incompleteTasks;
 
@@ -30,7 +30,7 @@ export async function createServer(database: Database) {
   });
 
   // Get a specific task
-  app.get('/tasks/:id', async (req: Request, res: Response) => {
+  app.get('/tasks/:id', async (req, res) => {
     try {
       const { id } = req.params;
       const task = await getTask.get([id]);
@@ -43,7 +43,7 @@ export async function createServer(database: Database) {
     }
   });
 
-  app.post('/tasks', async (req: Request, res: Response) => {
+  app.post('/tasks', async (req, res) => {
     try {
       const task = req.body;
       if (!task.title) return res.status(400).json({ message: 'Title is required' });
@@ -56,7 +56,7 @@ export async function createServer(database: Database) {
   });
 
   // Update a task
-  app.put('/tasks/:id', async (req: Request, res: Response) => {
+  app.put('/tasks/:id', async (req, res) => {
     try {
       const { id } = req.params;
 
@@ -72,7 +72,7 @@ export async function createServer(database: Database) {
   });
 
   // Delete a task
-  app.delete('/tasks/:id', async (req: Request, res: Response) => {
+  app.delete('/tasks/:id', async (req, res) => {
     try {
       const { id } = req.params;
       await deleteTask.run([id]);
