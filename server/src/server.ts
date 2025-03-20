@@ -1,43 +1,25 @@
 import cors from 'cors';
-import express, { RequestHandler, type Request, type Response } from 'express';
+import express, { type Request, type Response } from 'express';
 import type { Database } from 'sqlite';
-import { z, ZodSchema } from 'zod';
+import { z } from 'zod';
 import { handleError } from './handle-error.js';
 
-import { CreateTaskSchema, TaskSchema, UpdateTaskSchema } from 'busy-bee-schema';
+import { CreateTaskSchema, UpdateTaskSchema } from 'busy-bee-schema';
+import { TaskClient } from './client.js';
 
 export async function createServer(database: Database) {
   const app = express();
   app.use(cors());
   app.use(express.json());
 
-  const incompleteTasks = await database.prepare('SELECT * FROM tasks whERE completed = 0');
-  const completedTasks = await database.prepare('SELECT * FROM tasks WHERE completed = 1');
-  const getTask = await database.prepare('SELECT * FROM tasks WHERE id = ?');
-  const createTask = await database.prepare('INSERT INTO tasks (title, description) VALUES (?, ?)');
-  const deleteTask = await database.prepare('DELETE FROM tasks WHERE id = ?');
-  const updateTask = await database.prepare(
-    `UPDATE tasks SET title = ?, description = ?, completed = ? WHERE id = ?`,
-  );
-
-  const validateBody =
-    <T>(schema: ZodSchema<T>): RequestHandler<NonNullable<unknown>, unknown, T> =>
-    (req, res, next) => {
-      try {
-        schema.parse(req.body);
-        next();
-      } catch (error) {
-        return handleError(req, res, error);
-      }
-    };
+  const client = new TaskClient(database);
 
   app.get('/tasks', async (req: Request, res: Response) => {
     const { completed } = req.query;
-    const query = completed === 'true' ? completedTasks : incompleteTasks;
 
     try {
-      const tasks = await query.all();
-      return res.json(tasks);
+      const tasks = await client.getAllTasks({ completed: completed === 'true' });
+      return res.json(tasks || []);
     } catch (error) {
       return handleError(req, res, error);
     }
@@ -47,7 +29,7 @@ export async function createServer(database: Database) {
   app.get('/tasks/:id', async (req, res) => {
     try {
       const { id } = req.params;
-      const task = await getTask.get([id]);
+      const task = await client.getTask(Number(id));
 
       if (!task) return res.status(404).json({ message: 'Task not found' });
 
@@ -57,13 +39,14 @@ export async function createServer(database: Database) {
     }
   });
 
-  app.post('/tasks', validateBody(CreateTaskSchema), async (req, res) => {
+  app.post('/tasks', async (req, res) => {
     try {
-      const task = req.body;
+      const task = CreateTaskSchema.parse(req.body);
       if (!task.title) return res.status(400).json({ message: 'Title is required' });
 
-      await createTask.run([task.title, task.description]);
-      return res.status(201).json({ message: 'Task created successfully!' });
+      await client.createTask(task);
+      const tasks = await client.getAllTasks({ completed: false });
+      return res.status(201).json(tasks[0]);
     } catch (error) {
       return handleError(req, res, error);
     }
@@ -74,12 +57,15 @@ export async function createServer(database: Database) {
     try {
       const { id } = z.object({ id: z.coerce.number() }).parse(req.params);
 
-      const previous = TaskSchema.parse(await getTask.get([id]));
+      const previous = await client.getTask(id);
+      if (!previous) return res.status(404).json({ message: 'Task not found' });
+
       const updates = UpdateTaskSchema.parse(req.body);
       const task = { ...previous, ...updates };
 
-      await updateTask.run([task.title, task.description, task.completed, id]);
-      return res.status(200).send({ message: 'Task updated successfully' });
+      await client.updateTask(id, task);
+      const updated = await client.getTask(id);
+      return res.status(200).json(updated);
     } catch (error) {
       return handleError(req, res, error);
     }
@@ -89,7 +75,10 @@ export async function createServer(database: Database) {
   app.delete('/tasks/:id', async (req, res) => {
     try {
       const { id } = req.params;
-      await deleteTask.run([id]);
+      const task = await client.getTask(Number(id));
+      if (!task) return res.status(404).json({ message: 'Task not found' });
+
+      await client.deleteTask(Number(id));
       return res.status(200).json({ message: 'Task deleted successfully' });
     } catch (error) {
       return handleError(req, res, error);

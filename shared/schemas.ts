@@ -12,6 +12,10 @@ export const UpdateTaskSchema = TaskSchema.partial().omit({ id: true });
 
 export const TaskListSchema = z.array(TaskSchema);
 
+export const TaskListQuerySchema = z.object({
+  completed: z.coerce.boolean().optional(),
+});
+
 export type Task = z.infer<typeof TaskSchema>;
 export type CreateTask = z.infer<typeof CreateTaskSchema>;
 export type UpdateTask = z.infer<typeof UpdateTaskSchema>;

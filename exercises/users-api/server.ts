@@ -16,6 +16,7 @@ const UserSchema = z.object({
   email: z.string().email(),
 }) satisfies z.ZodType<User>;
 
+
 const UserId = UserSchema.pick({ id: true });
 
 const CreateUserSchema = UserSchema.omit({ id: true });
