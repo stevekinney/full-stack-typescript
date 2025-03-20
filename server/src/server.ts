@@ -6,11 +6,13 @@ import { handleError } from './handle-error.js';
 
 import { CreateTaskSchema, UpdateTaskSchema } from 'busy-bee-schema';
 import { TaskClient } from './client.js';
+import { createTrpcAdapter } from './trpc/trpc-adapter.js';
 
 export async function createServer(database: Database) {
   const app = express();
   app.use(cors());
   app.use(express.json());
+  app.use('/api', createTrpcAdapter());
 
   const client = new TaskClient(database);
 
