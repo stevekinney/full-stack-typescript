@@ -6,7 +6,13 @@ let databaseInstance: Awaited<ReturnType<typeof open>> | null = null;
 
 export async function getDatabase(
   filename = process.env.NODE_ENV === 'test' ? ':memory:' : './database.sqlite',
+  forceNew = false
 ) {
+  // For tests, allow forcing a new database instance
+  if (forceNew) {
+    databaseInstance = null;
+  }
+  
   // Return the existing instance if it exists
   if (databaseInstance) {
     return databaseInstance;

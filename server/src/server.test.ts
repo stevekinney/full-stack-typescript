@@ -17,7 +17,7 @@ describe('Tasks API', () => {
   let database: Database;
 
   beforeEach(async () => {
-    database = await getDatabase();
+    database = await getDatabase(':memory:', true); // Force a new database instance
     app = await createServer(database);
   });
 
