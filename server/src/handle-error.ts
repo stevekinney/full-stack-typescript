@@ -22,14 +22,14 @@ export interface ErrorResponseBody {
 /**
  * Type guard to check if an error is a ZodError
  */
-function isZodError(error: unknown): error is ZodError {
+export function isZodError(error: unknown): error is ZodError {
   return error instanceof ZodError;
 }
 
 /**
  * Type guard to check if an error is a standard Error object
  */
-function isError(error: unknown): error is Error {
+export function isError(error: unknown): error is Error {
   return error instanceof Error;
 }
 
