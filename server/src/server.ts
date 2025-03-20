@@ -65,7 +65,7 @@ export async function createServer(database: Database) {
       const task = { ...previous, ...updates };
 
       await updateTask.run([task.title, task.description, task.completed, id]);
-      return res.status(200).send('Task updated successfully!');
+      return res.status(200).send('Task updated successfully');
     } catch (error) {
       return handleError(req, res, error);
     }
@@ -76,7 +76,7 @@ export async function createServer(database: Database) {
     try {
       const { id } = req.params;
       await deleteTask.run([id]);
-      return res.status(200).json({ message: 'Task deleted successfully!' });
+      return res.status(200).json({ message: 'Task deleted successfully' });
     } catch (error) {
       return handleError(req, res, error);
     }
