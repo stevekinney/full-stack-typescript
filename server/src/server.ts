@@ -1,7 +1,10 @@
 import cors from 'cors';
-import express from 'express';
+import express, { type Request, type Response } from 'express';
 import type { Database } from 'sqlite';
+import { z } from 'zod';
 import { handleError } from './handle-error.js';
+
+import { CreateTaskSchema, TaskSchema, UpdateTaskSchema } from 'busy-bee-schema';
 
 export async function createServer(database: Database) {
   const app = express();
@@ -17,7 +20,7 @@ export async function createServer(database: Database) {
     `UPDATE tasks SET title = ?, description = ?, completed = ? WHERE id = ?`,
   );
 
-  app.get('/tasks', async (req, res) => {
+  app.get('/tasks', async (req: Request, res: Response) => {
     const { completed } = req.query;
     const query = completed === 'true' ? completedTasks : incompleteTasks;
 
@@ -45,7 +48,7 @@ export async function createServer(database: Database) {
 
   app.post('/tasks', async (req, res) => {
     try {
-      const task = req.body;
+      const task = CreateTaskSchema.parse(req.body);
       if (!task.title) return res.status(400).json({ message: 'Title is required' });
 
       await createTask.run([task.title, task.description]);
@@ -58,14 +61,14 @@ export async function createServer(database: Database) {
   // Update a task
   app.put('/tasks/:id', async (req, res) => {
     try {
-      const { id } = req.params;
+      const { id } = z.object({ id: z.coerce.number() }).parse(req.params);
 
-      const previous = await getTask.get([id]);
-      const updates = req.body;
+      const previous = TaskSchema.parse(await getTask.get([id]));
+      const updates = UpdateTaskSchema.parse(req.body);
       const task = { ...previous, ...updates };
 
       await updateTask.run([task.title, task.description, task.completed, id]);
-      return res.status(200).send('Task updated successfully');
+      return res.status(200).send({ message: 'Task updated successfully' });
     } catch (error) {
       return handleError(req, res, error);
     }
