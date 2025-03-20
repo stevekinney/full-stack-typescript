@@ -16,6 +16,7 @@
   "author": "Steve Kinney <hello@stevekinney.net> (https://stevekinney.net/courses/full-stack-typescript)",
   "license": "MIT",
   "dependencies": {
+    "busy-bee-schema": "*",
     "chalk": "^5.4.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",

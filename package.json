@@ -4,9 +4,7 @@
   "workspaces": [
     "server",
     "client",
-    "exercises"
-  ],
-  "dependencies": {
-    "class-variance-authority": "^0.7.1"
-  }
+    "exercises",
+    "shared"
+  ]
 }

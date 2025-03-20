@@ -19,6 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "@tailwindcss/vite": "^4.0.13",
+    "busy-bee-schema": "*",
     "chalk": "^5.4.1",
     "change-case": "^5.4.4",
     "class-variance-authority": "^0.7.1",

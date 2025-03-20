@@ -1,0 +1,17 @@
+{
+  "name": "busy-bee-schema",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "types": "index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Steve Kinney <hello@stevekinney.net> (https://stevekinney.net/courses/full-stack-typescript)",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "zod": "^3.24.2"
+  }
+}
