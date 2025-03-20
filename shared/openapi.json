@@ -1,0 +1,893 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Busy Bee API",
+    "version": "1.0.0",
+    "description": "API for managing tasks",
+    "contact": {
+      "name": "Steve Kinney",
+      "email": "hello@stevekinney.net"
+    }
+  },
+  "paths": {
+    "/tasks": {
+      "get": {
+        "tags": ["Tasks"],
+        "summary": "Get all tasks",
+        "description": "Retrieve all tasks, optionally filtered by completion status",
+        "parameters": [
+          {
+            "name": "completed",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filter tasks by completion status"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["array"],
+                  "items": {
+                    "type": ["object"],
+                    "properties": {
+                      "id": {
+                        "type": ["integer"]
+                      },
+                      "title": {
+                        "type": ["string"]
+                      },
+                      "description": {
+                        "type": ["string"]
+                      },
+                      "completed": {
+                        "type": ["boolean"]
+                      }
+                    },
+                    "required": ["id", "title"]
+                  },
+                  "description": "A collection of task items"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "message": {
+                      "type": ["string"],
+                      "description": "Error message describing what went wrong",
+                      "example": "Task not found"
+                    },
+                    "code": {
+                      "type": ["string"],
+                      "description": "Error code for more specific error handling",
+                      "example": "NOT_FOUND"
+                    },
+                    "errors": {
+                      "type": ["array"],
+                      "items": {
+                        "type": ["object"],
+                        "properties": {
+                          "path": {
+                            "type": ["array"],
+                            "items": {
+                              "oneOf": [
+                                {
+                                  "type": ["string"]
+                                },
+                                {
+                                  "type": ["number"]
+                                }
+                              ]
+                            },
+                            "description": "Path to the field with the error",
+                            "example": ["title"]
+                          },
+                          "message": {
+                            "type": ["string"],
+                            "description": "Error message for this specific field",
+                            "example": "Required"
+                          }
+                        },
+                        "required": ["path", "message"]
+                      },
+                      "description": "Detailed validation errors, if applicable"
+                    }
+                  },
+                  "required": ["message"],
+                  "description": "Standard error response"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Tasks"],
+        "summary": "Create a new task",
+        "description": "Add a new task to the database",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": ["object"],
+                "properties": {
+                  "title": {
+                    "type": ["string"]
+                  },
+                  "description": {
+                    "type": ["string"]
+                  }
+                },
+                "required": ["title"],
+                "description": "Data required to create a new task",
+                "example": {
+                  "title": "Create a new task",
+                  "description": "This is a new task to be created"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Task created successfully"
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "message": {
+                      "type": ["string"],
+                      "description": "Error message describing what went wrong",
+                      "example": "Task not found"
+                    },
+                    "code": {
+                      "type": ["string"],
+                      "description": "Error code for more specific error handling",
+                      "example": "NOT_FOUND"
+                    },
+                    "errors": {
+                      "type": ["array"],
+                      "items": {
+                        "type": ["object"],
+                        "properties": {
+                          "path": {
+                            "type": ["array"],
+                            "items": {
+                              "oneOf": [
+                                {
+                                  "type": ["string"]
+                                },
+                                {
+                                  "type": ["number"]
+                                }
+                              ]
+                            },
+                            "description": "Path to the field with the error",
+                            "example": ["title"]
+                          },
+                          "message": {
+                            "type": ["string"],
+                            "description": "Error message for this specific field",
+                            "example": "Required"
+                          }
+                        },
+                        "required": ["path", "message"]
+                      },
+                      "description": "Detailed validation errors, if applicable"
+                    }
+                  },
+                  "required": ["message"],
+                  "description": "Standard error response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "message": {
+                      "type": ["string"],
+                      "description": "Error message describing what went wrong",
+                      "example": "Task not found"
+                    },
+                    "code": {
+                      "type": ["string"],
+                      "description": "Error code for more specific error handling",
+                      "example": "NOT_FOUND"
+                    },
+                    "errors": {
+                      "type": ["array"],
+                      "items": {
+                        "type": ["object"],
+                        "properties": {
+                          "path": {
+                            "type": ["array"],
+                            "items": {
+                              "oneOf": [
+                                {
+                                  "type": ["string"]
+                                },
+                                {
+                                  "type": ["number"]
+                                }
+                              ]
+                            },
+                            "description": "Path to the field with the error",
+                            "example": ["title"]
+                          },
+                          "message": {
+                            "type": ["string"],
+                            "description": "Error message for this specific field",
+                            "example": "Required"
+                          }
+                        },
+                        "required": ["path", "message"]
+                      },
+                      "description": "Detailed validation errors, if applicable"
+                    }
+                  },
+                  "required": ["message"],
+                  "description": "Standard error response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/{id}": {
+      "get": {
+        "tags": ["Tasks"],
+        "summary": "Get a task by ID",
+        "description": "Retrieve a single task by its ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the task to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "id": {
+                      "type": ["integer"]
+                    },
+                    "title": {
+                      "type": ["string"]
+                    },
+                    "description": {
+                      "type": ["string"]
+                    },
+                    "completed": {
+                      "type": ["boolean"]
+                    }
+                  },
+                  "required": ["id", "title"],
+                  "description": "A task item",
+                  "example": {
+                    "id": 1,
+                    "title": "Complete OpenAPI integration",
+                    "description": "Add OpenAPI specs to the tasks API",
+                    "completed": false
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "message": {
+                      "type": ["string"],
+                      "description": "Error message describing what went wrong",
+                      "example": "Task not found"
+                    },
+                    "code": {
+                      "type": ["string"],
+                      "description": "Error code for more specific error handling",
+                      "example": "NOT_FOUND"
+                    },
+                    "errors": {
+                      "type": ["array"],
+                      "items": {
+                        "type": ["object"],
+                        "properties": {
+                          "path": {
+                            "type": ["array"],
+                            "items": {
+                              "oneOf": [
+                                {
+                                  "type": ["string"]
+                                },
+                                {
+                                  "type": ["number"]
+                                }
+                              ]
+                            },
+                            "description": "Path to the field with the error",
+                            "example": ["title"]
+                          },
+                          "message": {
+                            "type": ["string"],
+                            "description": "Error message for this specific field",
+                            "example": "Required"
+                          }
+                        },
+                        "required": ["path", "message"]
+                      },
+                      "description": "Detailed validation errors, if applicable"
+                    }
+                  },
+                  "required": ["message"],
+                  "description": "Standard error response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "message": {
+                      "type": ["string"],
+                      "description": "Error message describing what went wrong",
+                      "example": "Task not found"
+                    },
+                    "code": {
+                      "type": ["string"],
+                      "description": "Error code for more specific error handling",
+                      "example": "NOT_FOUND"
+                    },
+                    "errors": {
+                      "type": ["array"],
+                      "items": {
+                        "type": ["object"],
+                        "properties": {
+                          "path": {
+                            "type": ["array"],
+                            "items": {
+                              "oneOf": [
+                                {
+                                  "type": ["string"]
+                                },
+                                {
+                                  "type": ["number"]
+                                }
+                              ]
+                            },
+                            "description": "Path to the field with the error",
+                            "example": ["title"]
+                          },
+                          "message": {
+                            "type": ["string"],
+                            "description": "Error message for this specific field",
+                            "example": "Required"
+                          }
+                        },
+                        "required": ["path", "message"]
+                      },
+                      "description": "Detailed validation errors, if applicable"
+                    }
+                  },
+                  "required": ["message"],
+                  "description": "Standard error response"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Tasks"],
+        "summary": "Update a task",
+        "description": "Update an existing task by its ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the task to update"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": ["object"],
+                "properties": {
+                  "title": {
+                    "type": ["string"]
+                  },
+                  "description": {
+                    "type": ["string"]
+                  },
+                  "completed": {
+                    "type": ["boolean"]
+                  }
+                },
+                "description": "Data for updating an existing task",
+                "example": {
+                  "title": "Updated task title",
+                  "description": "Updated task description",
+                  "completed": true
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Task updated successfully"
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "message": {
+                      "type": ["string"],
+                      "description": "Error message describing what went wrong",
+                      "example": "Task not found"
+                    },
+                    "code": {
+                      "type": ["string"],
+                      "description": "Error code for more specific error handling",
+                      "example": "NOT_FOUND"
+                    },
+                    "errors": {
+                      "type": ["array"],
+                      "items": {
+                        "type": ["object"],
+                        "properties": {
+                          "path": {
+                            "type": ["array"],
+                            "items": {
+                              "oneOf": [
+                                {
+                                  "type": ["string"]
+                                },
+                                {
+                                  "type": ["number"]
+                                }
+                              ]
+                            },
+                            "description": "Path to the field with the error",
+                            "example": ["title"]
+                          },
+                          "message": {
+                            "type": ["string"],
+                            "description": "Error message for this specific field",
+                            "example": "Required"
+                          }
+                        },
+                        "required": ["path", "message"]
+                      },
+                      "description": "Detailed validation errors, if applicable"
+                    }
+                  },
+                  "required": ["message"],
+                  "description": "Standard error response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "message": {
+                      "type": ["string"],
+                      "description": "Error message describing what went wrong",
+                      "example": "Task not found"
+                    },
+                    "code": {
+                      "type": ["string"],
+                      "description": "Error code for more specific error handling",
+                      "example": "NOT_FOUND"
+                    },
+                    "errors": {
+                      "type": ["array"],
+                      "items": {
+                        "type": ["object"],
+                        "properties": {
+                          "path": {
+                            "type": ["array"],
+                            "items": {
+                              "oneOf": [
+                                {
+                                  "type": ["string"]
+                                },
+                                {
+                                  "type": ["number"]
+                                }
+                              ]
+                            },
+                            "description": "Path to the field with the error",
+                            "example": ["title"]
+                          },
+                          "message": {
+                            "type": ["string"],
+                            "description": "Error message for this specific field",
+                            "example": "Required"
+                          }
+                        },
+                        "required": ["path", "message"]
+                      },
+                      "description": "Detailed validation errors, if applicable"
+                    }
+                  },
+                  "required": ["message"],
+                  "description": "Standard error response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "message": {
+                      "type": ["string"],
+                      "description": "Error message describing what went wrong",
+                      "example": "Task not found"
+                    },
+                    "code": {
+                      "type": ["string"],
+                      "description": "Error code for more specific error handling",
+                      "example": "NOT_FOUND"
+                    },
+                    "errors": {
+                      "type": ["array"],
+                      "items": {
+                        "type": ["object"],
+                        "properties": {
+                          "path": {
+                            "type": ["array"],
+                            "items": {
+                              "oneOf": [
+                                {
+                                  "type": ["string"]
+                                },
+                                {
+                                  "type": ["number"]
+                                }
+                              ]
+                            },
+                            "description": "Path to the field with the error",
+                            "example": ["title"]
+                          },
+                          "message": {
+                            "type": ["string"],
+                            "description": "Error message for this specific field",
+                            "example": "Required"
+                          }
+                        },
+                        "required": ["path", "message"]
+                      },
+                      "description": "Detailed validation errors, if applicable"
+                    }
+                  },
+                  "required": ["message"],
+                  "description": "Standard error response"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Tasks"],
+        "summary": "Delete a task",
+        "description": "Delete a task by its ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the task to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task deleted successfully"
+          },
+          "404": {
+            "description": "Task not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "message": {
+                      "type": ["string"],
+                      "description": "Error message describing what went wrong",
+                      "example": "Task not found"
+                    },
+                    "code": {
+                      "type": ["string"],
+                      "description": "Error code for more specific error handling",
+                      "example": "NOT_FOUND"
+                    },
+                    "errors": {
+                      "type": ["array"],
+                      "items": {
+                        "type": ["object"],
+                        "properties": {
+                          "path": {
+                            "type": ["array"],
+                            "items": {
+                              "oneOf": [
+                                {
+                                  "type": ["string"]
+                                },
+                                {
+                                  "type": ["number"]
+                                }
+                              ]
+                            },
+                            "description": "Path to the field with the error",
+                            "example": ["title"]
+                          },
+                          "message": {
+                            "type": ["string"],
+                            "description": "Error message for this specific field",
+                            "example": "Required"
+                          }
+                        },
+                        "required": ["path", "message"]
+                      },
+                      "description": "Detailed validation errors, if applicable"
+                    }
+                  },
+                  "required": ["message"],
+                  "description": "Standard error response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "message": {
+                      "type": ["string"],
+                      "description": "Error message describing what went wrong",
+                      "example": "Task not found"
+                    },
+                    "code": {
+                      "type": ["string"],
+                      "description": "Error code for more specific error handling",
+                      "example": "NOT_FOUND"
+                    },
+                    "errors": {
+                      "type": ["array"],
+                      "items": {
+                        "type": ["object"],
+                        "properties": {
+                          "path": {
+                            "type": ["array"],
+                            "items": {
+                              "oneOf": [
+                                {
+                                  "type": ["string"]
+                                },
+                                {
+                                  "type": ["number"]
+                                }
+                              ]
+                            },
+                            "description": "Path to the field with the error",
+                            "example": ["title"]
+                          },
+                          "message": {
+                            "type": ["string"],
+                            "description": "Error message for this specific field",
+                            "example": "Required"
+                          }
+                        },
+                        "required": ["path", "message"]
+                      },
+                      "description": "Detailed validation errors, if applicable"
+                    }
+                  },
+                  "required": ["message"],
+                  "description": "Standard error response"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Task": {
+        "type": ["object"],
+        "properties": {
+          "id": {
+            "type": ["integer"]
+          },
+          "title": {
+            "type": ["string"]
+          },
+          "description": {
+            "type": ["string"]
+          },
+          "completed": {
+            "type": ["boolean"]
+          }
+        },
+        "required": ["id", "title"],
+        "description": "A task item",
+        "example": {
+          "id": 1,
+          "title": "Complete OpenAPI integration",
+          "description": "Add OpenAPI specs to the tasks API",
+          "completed": false
+        }
+      },
+      "Tasks": {
+        "type": ["array"],
+        "items": {
+          "type": ["object"],
+          "properties": {
+            "id": {
+              "type": ["integer"]
+            },
+            "title": {
+              "type": ["string"]
+            },
+            "description": {
+              "type": ["string"]
+            },
+            "completed": {
+              "type": ["boolean"]
+            }
+          },
+          "required": ["id", "title"]
+        },
+        "description": "A collection of task items"
+      },
+      "NewTask": {
+        "type": ["object"],
+        "properties": {
+          "title": {
+            "type": ["string"]
+          },
+          "description": {
+            "type": ["string"]
+          }
+        },
+        "required": ["title"],
+        "description": "Data required to create a new task",
+        "example": {
+          "title": "Create a new task",
+          "description": "This is a new task to be created"
+        }
+      },
+      "UpdateTask": {
+        "type": ["object"],
+        "properties": {
+          "title": {
+            "type": ["string"]
+          },
+          "description": {
+            "type": ["string"]
+          },
+          "completed": {
+            "type": ["boolean"]
+          }
+        },
+        "description": "Data for updating an existing task",
+        "example": {
+          "title": "Updated task title",
+          "description": "Updated task description",
+          "completed": true
+        }
+      },
+      "ErrorResponse": {
+        "type": ["object"],
+        "properties": {
+          "message": {
+            "type": ["string"],
+            "description": "Error message describing what went wrong",
+            "example": "Task not found"
+          },
+          "code": {
+            "type": ["string"],
+            "description": "Error code for more specific error handling",
+            "example": "NOT_FOUND"
+          },
+          "errors": {
+            "type": ["array"],
+            "items": {
+              "type": ["object"],
+              "properties": {
+                "path": {
+                  "type": ["array"],
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": ["string"]
+                      },
+                      {
+                        "type": ["number"]
+                      }
+                    ]
+                  },
+                  "description": "Path to the field with the error",
+                  "example": ["title"]
+                },
+                "message": {
+                  "type": ["string"],
+                  "description": "Error message for this specific field",
+                  "example": "Required"
+                }
+              },
+              "required": ["path", "message"]
+            },
+            "description": "Detailed validation errors, if applicable"
+          }
+        },
+        "required": ["message"],
+        "description": "Standard error response"
+      }
+    }
+  }
+}
