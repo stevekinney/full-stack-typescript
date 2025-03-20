@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { handleError, isZodError, isError } from './handle-error.js';
 import { Request, Response } from 'express';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ZodError, z } from 'zod';
+import { handleError, isError, isZodError } from './handle-error.js';
 
 // Mock console.error to avoid test logs
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -15,12 +15,12 @@ describe('handle-error', () => {
   beforeEach(() => {
     jsonMock = vi.fn().mockReturnThis();
     statusMock = vi.fn().mockReturnValue({ json: jsonMock });
-    
+
     req = {
       path: '/test-path',
       method: 'GET',
     } as unknown as Request;
-    
+
     res = {
       status: statusMock,
       json: jsonMock,
@@ -65,7 +65,7 @@ describe('handle-error', () => {
   describe('handleError', () => {
     it('should throw an error if request path is not defined', () => {
       const reqWithoutPath = { method: 'GET' } as unknown as Request;
-      
+
       expect(() => {
         handleError(reqWithoutPath, res, new Error('test error'));
       }).toThrow('Request route is not defined');
@@ -76,12 +76,17 @@ describe('handle-error', () => {
         name: z.string(),
         age: z.number().positive(),
       });
-      
-      let zodError: ZodError;
+
+      let zodError: ZodError | undefined;
+
       try {
         schema.parse({ name: 123, age: -1 });
       } catch (e) {
         zodError = e as ZodError;
+      }
+
+      if (!zodError) {
+        throw new Error('Expected ZodError to be thrown');
       }
 
       handleError(req, res, zodError);
@@ -101,9 +106,9 @@ describe('handle-error', () => {
 
     it('should handle standard Error objects', () => {
       const error = new Error('test error message');
-      
+
       handleError(req, res, error);
-      
+
       expect(statusMock).toHaveBeenCalledWith(500);
       expect(jsonMock).toHaveBeenCalledWith({
         message: 'test error message',
@@ -114,7 +119,7 @@ describe('handle-error', () => {
 
     it('should handle unknown error types', () => {
       handleError(req, res, 'string error');
-      
+
       expect(statusMock).toHaveBeenCalledWith(500);
       expect(jsonMock).toHaveBeenCalledWith({
         message: 'Unknown error',

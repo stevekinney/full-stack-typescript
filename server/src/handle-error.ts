@@ -1,6 +1,9 @@
+import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import chalk from 'chalk';
 import type { Request, Response } from 'express';
-import { ZodError } from 'zod';
+import { z, ZodError } from 'zod';
+
+extendZodWithOpenApi(z);
 
 /**
  * Represents a formatted validation error
@@ -80,3 +83,35 @@ export const handleError = <
     code: 'INTERNAL_SERVER_ERROR',
   });
 };
+
+export const ErrorResponseSchema = z
+  .object({
+    message: z.string().openapi({
+      description: 'Error message describing what went wrong',
+      example: 'Task not found',
+    }),
+    code: z.string().optional().openapi({
+      description: 'Error code for more specific error handling',
+      example: 'NOT_FOUND',
+    }),
+    errors: z
+      .array(
+        z.object({
+          path: z.array(z.union([z.string(), z.number()])).openapi({
+            description: 'Path to the field with the error',
+            example: ['title'],
+          }),
+          message: z.string().openapi({
+            description: 'Error message for this specific field',
+            example: 'Required',
+          }),
+        }),
+      )
+      .optional()
+      .openapi({
+        description: 'Detailed validation errors, if applicable',
+      }),
+  })
+  .openapi({
+    description: 'Standard error response',
+  });
