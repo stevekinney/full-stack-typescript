@@ -128,7 +128,9 @@ describe('Tasks API', () => {
         .post('/tasks')
         .send({ title: 'Task to complete', description: 'Will be completed' });
       const getAllResponse = await request(app).get('/tasks');
-      const taskId = getAllResponse.body.find((task) => task.title === 'Task to complete').id;
+      const taskId = getAllResponse.body.find(
+        (task: { title: string }) => task.title === 'Task to complete',
+      ).id;
 
       // Mark the task as completed
       const updateResponse = await request(app).put(`/tasks/${taskId}`).send({
@@ -168,5 +170,4 @@ describe('Tasks API', () => {
       expect(getDeletedResponse.body).toEqual({ message: 'Task not found' });
     });
   });
-
 });
