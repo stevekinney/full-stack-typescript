@@ -35,7 +35,9 @@
     // Path resolution
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@server/*": ["../server/*"],
+      "@shared/*": ["../shared/*"]
     },
 
     // Code quality flags (adjust as needed)
@@ -48,6 +50,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../server/**/*", "../shared/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }
