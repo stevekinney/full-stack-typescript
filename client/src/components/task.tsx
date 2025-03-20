@@ -11,10 +11,8 @@ export const Task = (task: TaskItem) => {
   return (
     <li
       id={`task-${task.id}`}
-      className="space-y-4 rounded bg-slate-50 p-4 transition-colors duration-200 outline-none focus:ring-2 focus:ring-purple-500 focus:outline-none dark:bg-slate-800"
-      tabIndex={0}
+      className="space-y-4 rounded bg-slate-50 p-4 transition-colors duration-200 focus:ring-2 focus:ring-purple-500 focus:outline-none dark:bg-slate-800"
       aria-labelledby={`task-title-${task.id}`}
-      role="article"
     >
       <article
         className="flex items-center justify-between gap-8"
@@ -33,6 +31,8 @@ export const Task = (task: TaskItem) => {
             });
           }}
           checked={task.completed}
+          aria-labelledby={`task-title-${task.id}`}
+          aria-label={`Mark ${task.title} as ${task.completed ? 'incomplete' : 'complete'}`}
         />
         <div className="w-full">
           <h3

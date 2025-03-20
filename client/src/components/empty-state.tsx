@@ -14,6 +14,12 @@ export const EmptyState = () => {
 
 export const LoadingState = () => {
   return (
-    <div className="flex min-h-96 animate-pulse items-center justify-center space-y-4 rounded bg-slate-50 p-4 dark:bg-slate-800"></div>
+    <div 
+      className="flex min-h-96 animate-pulse items-center justify-center space-y-4 rounded bg-slate-50 p-4 dark:bg-slate-800"
+      role="status"
+      aria-live="polite"
+    >
+      <span className="sr-only">Loading tasks...</span>
+    </div>
   );
 };

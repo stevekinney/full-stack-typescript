@@ -13,7 +13,7 @@ export const Header = () => {
   return (
     <header className="mb-8 flex items-center justify-between" role="banner">
       <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Busy Bee</h1>
-      <nav className="flex items-center gap-4">
+      <nav className="flex items-center gap-4" aria-label="Filter tasks">
         <a
           href="/"
           className={cx('text-sm text-gray-500 hover:underline', !completed && activeClass)}
