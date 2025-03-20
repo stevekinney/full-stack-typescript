@@ -34,12 +34,30 @@ app.post('/users', (req, res) => {
 
 // Read all users
 app.get('/users', (req, res) => {
-  res.json(users);
+  const { name, email } = req.query;
+
+  let filteredUsers = users;
+
+  if (name) {
+    filteredUsers = filteredUsers.filter((user) =>
+      user.name.toLowerCase().includes((name as string).toLowerCase()),
+    );
+  }
+
+  if (email) {
+    filteredUsers = filteredUsers.filter((user) =>
+      user.email.toLowerCase().includes((email as string).toLowerCase()),
+    );
+  }
+
+  res.json(filteredUsers);
 });
 
 // Read a single user by ID
 app.get('/users/:id', (req, res) => {
-  const user = users.find((u) => u.id === req.params.id);
+  const { id } = req.params;
+
+  const user = users.find((u) => u.id === id);
 
   if (!user) {
     return res.status(404).json({ message: 'User not found' });
@@ -50,7 +68,9 @@ app.get('/users/:id', (req, res) => {
 
 // Update a user by ID
 app.put('/users/:id', (req, res) => {
-  const user = users.find((u) => u.id === req.params.id);
+  const { id } = req.params;
+
+  const user = users.find((u) => u.id === id);
 
   if (!user) {
     return res.status(404).json({ message: 'User not found' });
@@ -66,7 +86,10 @@ app.put('/users/:id', (req, res) => {
 
 // Delete a user by ID
 app.delete('/users/:id', (req, res) => {
-  const index = users.findIndex((u) => u.id === req.params.id);
+  const id = req.params.id;
+
+  const index = users.findIndex((u) => u.id === id);
+
   if (index === -1) {
     return res.status(404).json({ message: 'User not found' });
   }
