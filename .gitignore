@@ -45,3 +45,4 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+*.sqlite-journal
