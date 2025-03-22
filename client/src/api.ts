@@ -1,6 +1,6 @@
 const API_URL = 'http://localhost:4001';
 
-import { CreateTask, UpdateTask } from 'busy-bee-schema';
+import { CreateTask, Task, UpdateTask } from 'busy-bee-schema';
 
 import type { taskRouter } from '@server/src/trpc/trpc';
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
@@ -13,7 +13,7 @@ const client = createTRPCProxyClient<typeof taskRouter>({
   ],
 });
 
-export const fetchTasks = async (showCompleted: boolean) => {
+export const fetchTasks = async (showCompleted: boolean): Promise<Task[]> => {
   return client.getTasks.query({ completed: showCompleted });
 };
 
