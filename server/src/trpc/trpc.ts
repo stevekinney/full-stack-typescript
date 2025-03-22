@@ -15,12 +15,16 @@ export const publicProcedure = t.procedure;
 
 export const taskRouter = router({
   getTasks: publicProcedure.input(TaskListQuerySchema).query(async ({ input, ctx }) => {
-    const tasks = ctx.tasks;
-    return tasks.getAllTasks({ completed: !!input.completed });
+    const { prisma } = ctx;
+    return prisma.task.findMany({
+      where: { completed: !!input.completed },
+    });
   }),
   createTask: publicProcedure.input(CreateTaskSchema).mutation(async ({ input, ctx }) => {
-    const tasks = ctx.tasks;
-    return tasks.createTask(input);
+    const { prisma } = ctx;
+    return prisma.task.create({
+      data: input,
+    });
   }),
   updateTask: publicProcedure.input(UpdateSchema).mutation(async ({ input, ctx }) => {
     const tasks = ctx.tasks;

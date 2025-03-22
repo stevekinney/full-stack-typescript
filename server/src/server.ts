@@ -4,6 +4,9 @@ import type { Database } from 'sqlite';
 import { z } from 'zod';
 import { handleError } from './handle-error.js';
 
+import swaggerUi from 'swagger-ui-express';
+import openApi from '../openapi.json' with { type: 'json' };
+
 import { CreateTaskSchema, UpdateTaskSchema } from 'busy-bee-schema';
 import { TaskClient } from './client.js';
 import { createTrpcAdapter } from './trpc/trpc-adapter.js';
@@ -13,6 +16,8 @@ export async function createServer(database: Database) {
   app.use(cors());
   app.use(express.json());
   app.use('/api', createTrpcAdapter());
+
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openApi, { explorer: true }));
 
   const client = new TaskClient(database);
 
